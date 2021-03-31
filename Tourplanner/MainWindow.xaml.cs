@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tourplanner.ViewModels;
 
 namespace Tourplanner
 {
@@ -23,6 +24,7 @@ namespace Tourplanner
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new TourFolderVM();
         }
     }
 }
