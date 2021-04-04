@@ -6,27 +6,147 @@
         xmlns:local="clr-namespace:Tourplanner"
         xmlns:viewmodels="clr-namespace:Tourplanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TourFolderVM}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="Amazing Tourplanner" Height="500" Width="800" MinHeight="500" MinWidth="800">
 
-    <Grid Margin ="10">
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <TextBlock> Media ITEM List</TextBlock>
+    <Grid Background="#2c2f33" >
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="22*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.ColumnSpan="2" Background="#2c2f33">
+            <MenuItem Header="_File" Foreground="White" Background="#2c2f33">
+                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Right" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Left" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Right" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="_Options" Foreground="White" Background="#2c2f33">
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="_Help" Foreground="White" Background="#2c2f33">
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Margin="10,0,0,0" Padding="10,3.5,10,0" Text="{Binding SearchName, Mode=TwoWay}">
+                <TextBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="15"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+
+            <Button Height="25"  Grid.Column="1" Margin="10,0,0,0" Background="#626977" ToolTip="Search" Command="{Binding SearchCommand}">
+                <Image Source="Images/right-pointing-magnifying-glass.png"></Image>
+            </Button>
+            <Button Height="25" Grid.Column="2" Margin="10,0,10,0" Background="#626977" ToolTip="Delete Search Request" Command="{Binding ClearCommand}">
+                <Image Source="Images/fire-extinguisher.png"/>
+            </Button>
+
+        </Grid>
+
+        
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="1" Background="#626977" Margin="5" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem}">
+                <ListView.BorderBrush>
+                    <RadialGradientBrush Opacity="10000"></RadialGradientBrush>
+                </ListView.BorderBrush>
+            </ListView>
+
+            <StackPanel  Margin="5,5,0,0" Orientation="Horizontal">
+                <TextBlock  Foreground="White" Margin="0,5,5,5">Your Tours</TextBlock>
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Add a Tour">
+                    <Image Source="Images/plus-sign.png"/>
+                </Button>
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour">
+                    <Image Source="Images/minus-sign.png"/>
+                </Button>
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Print a Tour">
+                    <Image Source="Images/printer.png"/>
+                </Button>
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Reload your Tours">
+                    <Image Source="Images/reload.png"/>
+                </Button>
+            </StackPanel>
+
+            <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="#626977" ></GridSplitter>
+
             
-                <TextBlock Grid.Column="0" Text="Name:  " VerticalAlignment="Center"/>
-                <TextBox   Grid.Column="1" VerticalAlignment="Center" Name="txtSearchName" Text="{Binding SearchName, Mode=TwoWay}"/>
-                <Button    Grid.Column="2" Width="50" Margin="5,0,0,0" Command="{Binding SearchCommand}">Search</Button>
-                <Button    Grid.Column="3" Width="50" Margin="5,0,0,0" Command="{Binding ClearCommand}">Clear</Button>
+            <Grid Grid.Column="2" Grid.RowSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <TabControl Background="#626977" Margin="5,5,5,5">
+
+                    <TabItem Header="Route">
+                    </TabItem>
+                    <TabItem Header="Description"></TabItem>
+                </TabControl>
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="#626977" ></GridSplitter>
+
+                <DockPanel Grid.Row="2" Margin="5,5,5,5">
+                    <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                        <Menu.ItemsPanel>  
+                            <ItemsPanelTemplate>  
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                </Grid> 
+                            </ItemsPanelTemplate>  
+                        </Menu.ItemsPanel> 
+                        <MenuItem Header="Logs" Grid.Column="0"/>
+                        <MenuItem Grid.Column="1"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="2"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="3"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                    </Menu>
+                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date"/>
+                            <DataGridTextColumn Header="Duration"/>
+                            <DataGridTextColumn Header="Distance"/>
+                            <DataGridTextColumn Header="Notice"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+                
+
             </Grid>
-        </StackPanel>
-        <ListBox x:Name="listTourItems" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem}" DisplayMemberPath="Name" Margin="0,50,0,0"/>
+
+        </Grid>
+        
+
     </Grid>
 
 

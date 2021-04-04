@@ -7,6 +7,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\fire-extinguisher.png" />
+    <None Remove="Images\minus-sign.png" />
+    <None Remove="Images\plus-sign.png" />
+    <None Remove="Images\printer.png" />
+    <None Remove="Images\reload.png" />
+    <None Remove="Images\right-pointing-magnifying-glass.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\fire-extinguisher.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\minus-sign.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\plus-sign.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\printer.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\reload.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\right-pointing-magnifying-glass.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Tourplanner.BusinessLayer\Tourplanner.BusinessLayer.csproj" />
     <ProjectReference Include="..\Tourplanner.Models\Tourplanner.Models.csproj" />
   </ItemGroup>
