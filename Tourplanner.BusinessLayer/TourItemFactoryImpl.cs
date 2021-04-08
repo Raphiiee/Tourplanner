@@ -20,5 +20,15 @@ namespace Tourplanner.BusinessLayer
 
             return items.Where(x => x.Name.ToLower().Contains(itemName.ToLower()));
         }
+
+        public IEnumerable<TourItem> AddTourItem()
+        {
+            return tourItemDAO.AddItems();
+        }
+
+        public IEnumerable<TourItem> DeleteTourItem()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -41,7 +41,7 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <TextBox Margin="10,0,0,0" Padding="10,3.5,10,0" Text="{Binding SearchName, Mode=TwoWay}">
+            <TextBox Margin="10,0,0,0" Padding="10,3.5,10,0" Text="{Binding SearchName, Mode=TwoWay}" >
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="15"></Setter>
@@ -71,7 +71,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="1" Background="#626977" Margin="5" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem}">
+            <ListView Grid.Row="1" Foreground="White" Background="#626977" Margin="5" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem, Mode=TwoWay}" DisplayMemberPath="Name" SelectedIndex="0">
                 <ListView.BorderBrush>
                     <RadialGradientBrush Opacity="10000"></RadialGradientBrush>
                 </ListView.BorderBrush>
@@ -79,7 +79,7 @@
 
             <StackPanel  Margin="5,5,0,0" Orientation="Horizontal">
                 <TextBlock  Foreground="White" Margin="0,5,5,5">Your Tours</TextBlock>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Add a Tour">
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Add a Tour" Command="{Binding AddTourCommand}">
                     <Image Source="Images/plus-sign.png"/>
                 </Button>
                 <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour">

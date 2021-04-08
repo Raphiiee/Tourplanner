@@ -21,8 +21,22 @@ namespace Tourplanner.DataAccessLayer
                 new TourItem() {Name = "Tour 2"},
                 new TourItem() {Name = "Tour 3"},
                 new TourItem() {Name = "Apfel"},
+                new TourItem() {Name = "Appel"},
                 new TourItem() {Name = "Banane"}
             };
+        }
+
+        public List<TourItem> AddItems()
+        {
+            return new List<TourItem>()
+            {
+                new TourItem() {Name = "New Tour"}
+            };
+        }
+
+        public List<TourItem> DeleteItems()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

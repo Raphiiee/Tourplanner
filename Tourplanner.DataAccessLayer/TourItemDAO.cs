@@ -13,10 +13,19 @@ namespace Tourplanner.DataAccessLayer
             // dataAccess = new Database();
              dataAccess = new FileSystem();
         }
-
+        
         public List<TourItem> GetItems()
         {
             return dataAccess.GetItems();
         }
+        public List<TourItem> AddItems()
+        {
+            return dataAccess.AddItems();
+        }
+        public List<TourItem> DeleteItems()
+        {
+            return dataAccess.GetItems();
+        }
+
     }
 }
