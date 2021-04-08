@@ -22,9 +22,9 @@ namespace Tourplanner.DataAccessLayer
         {
             return dataAccess.AddItems();
         }
-        public List<TourItem> DeleteItems()
+        public void DeleteItems(TourItem deleteTourItem)
         {
-            return dataAccess.GetItems();
+            dataAccess.DeleteItems(deleteTourItem);
         }
 
     }

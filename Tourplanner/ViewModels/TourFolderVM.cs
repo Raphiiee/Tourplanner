@@ -11,6 +11,7 @@ namespace Tourplanner.ViewModels
         private ICommand _searchCommand;
         private ICommand _clearCommand;
         private ICommand _addTourCommand;
+        private ICommand _deleteTourCommand;
         private TourItem _currentItem;
         private ITourItemFactory _tourItemFactory;
         private string _searchName;
@@ -18,6 +19,7 @@ namespace Tourplanner.ViewModels
         public ICommand SearchCommand => _searchCommand ??= new RelayCommand(Search);
         public ICommand ClearCommand => _clearCommand ??= new RelayCommand(Clear);
         public ICommand AddTourCommand => _addTourCommand ??= new RelayCommand(AddTourItem);
+        public ICommand DeleteTourCommand => _deleteTourCommand ??= new RelayCommand(DeleteTourItem);
 
         public ObservableCollection<TourItem> Items { get; set; }
 
@@ -72,6 +74,11 @@ namespace Tourplanner.ViewModels
                 Items.Add(item);
             }
 
+            PreselectListviewItem();
+        }
+
+        private void PreselectListviewItem()
+        {
             if (Items.Count > 0)
             {
                 CurrentItem = Items[0];
@@ -102,6 +109,18 @@ namespace Tourplanner.ViewModels
             {
                 Items.Add(item);
             }
+
+            if (Items.Count < 2)
+            {
+                PreselectListviewItem();
+            }
+        }
+
+        private void DeleteTourItem(object commandParameter)
+        {
+            _tourItemFactory.DeleteTourItem(CurrentItem);
+            Items.Remove(CurrentItem);
+            PreselectListviewItem();
         }
 
     }

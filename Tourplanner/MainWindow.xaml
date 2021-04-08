@@ -82,7 +82,7 @@
                 <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Add a Tour" Command="{Binding AddTourCommand}">
                     <Image Source="Images/plus-sign.png"/>
                 </Button>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour">
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour" Command="{Binding DeleteTourCommand}">
                     <Image Source="Images/minus-sign.png"/>
                 </Button>
                 <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Print a Tour">
@@ -105,9 +105,9 @@
                 
                 <TabControl Background="#626977" Margin="5,5,5,5">
 
-                    <TabItem Header="Route">
-                    </TabItem>
+                    <TabItem Header="Route"></TabItem>
                     <TabItem Header="Description"></TabItem>
+                    <TabItem Header="Options"></TabItem>
                 </TabControl>
 
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="#626977" ></GridSplitter>
@@ -131,7 +131,7 @@
                         <MenuItem Grid.Column="2"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                         <MenuItem Grid.Column="3"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                     </Menu>
-                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977">
+                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem}" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Date"/>
                             <DataGridTextColumn Header="Duration"/>

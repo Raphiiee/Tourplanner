@@ -26,9 +26,9 @@ namespace Tourplanner.BusinessLayer
             return tourItemDAO.AddItems();
         }
 
-        public IEnumerable<TourItem> DeleteTourItem()
+        public void DeleteTourItem(TourItem deleteTourItem)
         {
-            throw new System.NotImplementedException();
+            tourItemDAO.DeleteItems(deleteTourItem);
         }
     }
 }

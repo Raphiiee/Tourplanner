@@ -7,6 +7,6 @@ namespace Tourplanner.DataAccessLayer
     {
         public List<TourItem> GetItems();
         public List<TourItem> AddItems();
-        public List<TourItem> DeleteItems();
+        public void DeleteItems(TourItem deleteTourItem);
     }
 }

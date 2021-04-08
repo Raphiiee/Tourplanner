@@ -32,9 +32,9 @@ namespace Tourplanner.DataAccessLayer
             };
         }
 
-        public List<TourItem> DeleteItems()
+        public void DeleteItems(TourItem deleteTourItem)
         {
-            throw new System.NotImplementedException();
+            // Delete Tour ITEM from Database
         }
     }
 }

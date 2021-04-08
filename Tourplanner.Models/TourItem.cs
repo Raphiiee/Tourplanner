@@ -9,6 +9,8 @@ namespace Tourplanner.Models
         public string Distance { get; set; }
         public string Notice { get; set; }
         public string Name { get; set; }
+        public string Start { get; set; }
+        public string Destination { get; set; }
 
     }
 }
