@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Tourplanner.Models;
 
 namespace Tourplanner.DataAccessLayer
@@ -18,12 +19,12 @@ namespace Tourplanner.DataAccessLayer
             // get media items from file system
             return new List<TourItem>()
             {
-                new TourItem() {Name = "Tour 1", Destination = "Wien", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/1998)},
-                new TourItem() {Name = "Tour 2", Destination = "Salzburg", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/1999)},
-                new TourItem() {Name = "Tour 3", Destination = "München", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/2000)},
-                new TourItem() {Name = "Apfel", Destination = "Grado", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/2001)},
-                new TourItem() {Name = "Appel", Destination = "Korneuburg", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/2002)},
-                new TourItem() {Name = "Banane", Destination = "Stockerau", Start = "Hollabrunn", Distance = "1112", Notice = "ABCD", Date = new DateTime(31/03/2003)}
+                new TourItem() {TourId = 1, TourName = "Tour 1", Destination = "Wien",       Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "1112", Notice = "ABCD", Date = new DateTime(2021, 12, 12, 0, 0, 0)}}},
+                new TourItem() {TourId = 2, TourName = "Tour 2", Destination = "Salzburg",   Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "0012", Notice = "ABCD", Date = new DateTime(2020, 12, 12, 0, 0, 0)}}},
+                new TourItem() {TourId = 3, TourName = "Tour 3", Destination = "München",    Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "0013", Notice = "ABCD", Date = new DateTime(2019, 12, 12, 0, 0, 0)}}},
+                new TourItem() {TourId = 4, TourName = "Apfel",  Destination = "Grado",      Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "0014", Notice = "ABCD", Date = new DateTime(2018, 12, 12, 0, 0, 0)}}},
+                new TourItem() {TourId = 5, TourName = "Appel",  Destination = "Korneuburg", Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "0015", Notice = "ABCD", Date = new DateTime(2017, 12, 12, 0, 0, 0)}}},
+                new TourItem() {TourId = 6, TourName = "Banane", Destination = "Stockerau",  Start = "Hollabrunn", Log = new List<LogItem>(){new LogItem(){Distance = "0016", Notice = "ABCD", Date = new DateTime(2016, 12, 12, 0, 0, 0)}}}
             };
         }
 
@@ -31,7 +32,7 @@ namespace Tourplanner.DataAccessLayer
         {
             return new List<TourItem>()
             {
-                new TourItem() {Name = "New Tour"}
+                new TourItem() {TourName = "New Tour"}
             };
         }
 

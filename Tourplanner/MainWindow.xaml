@@ -71,7 +71,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="1" Foreground="White" Background="#626977" Margin="5" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem, Mode=TwoWay}" DisplayMemberPath="Name" SelectedIndex="0">
+            <ListView Grid.Row="1" Foreground="White" Background="#626977" Margin="5" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem, Mode=TwoWay}" DisplayMemberPath="TourName" SelectedIndex="0">
                 <ListView.BorderBrush>
                     <RadialGradientBrush Opacity="10000"></RadialGradientBrush>
                 </ListView.BorderBrush>
@@ -131,13 +131,8 @@
                         <MenuItem Grid.Column="2"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                         <MenuItem Grid.Column="3"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                     </Menu>
-                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem}" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date"/>
-                            <DataGridTextColumn Header="Duration"/>
-                            <DataGridTextColumn Header="Distance"/>
-                            <DataGridTextColumn Header="Notice"/>
-                        </DataGrid.Columns>
+                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem.Log}" AutoGenerateColumns="True">
+                        
                     </DataGrid>
                 </DockPanel>
                 
