@@ -6,7 +6,7 @@ namespace Tourplanner.Models
 {
     public class TourItem
     {
-        public List<LogItem> Log { get; set; }
+        public ObservableCollection<LogItem> Log { get; set; }
         public string TourName { get; set; }
         public int TourId { get; set; }
         public string Start { get; set; }

@@ -127,11 +127,11 @@
                             </ItemsPanelTemplate>  
                         </Menu.ItemsPanel> 
                         <MenuItem Header="Logs" Grid.Column="0"/>
-                        <MenuItem Grid.Column="1"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="2"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="1" Command="{Binding AddLogCommand}"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="2" Command="{Binding DeleteLogCommand}"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                         <MenuItem Grid.Column="3"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                     </Menu>
-                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem.Log}" AutoGenerateColumns="True">
+                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem.Log}" AutoGenerateColumns="True" CanUserAddRows="False" SelectedItem="{Binding CurrentLogItem}">
                         
                     </DataGrid>
                 </DockPanel>

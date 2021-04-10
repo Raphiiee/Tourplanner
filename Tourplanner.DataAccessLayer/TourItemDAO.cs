@@ -27,5 +27,10 @@ namespace Tourplanner.DataAccessLayer
             dataAccess.DeleteItems(deleteTourItem);
         }
 
+        public void DeleteLogItems(LogItem deleteLogItem)
+        {
+            dataAccess.DeleteLogItems(deleteLogItem);
+        }
+
     }
 }

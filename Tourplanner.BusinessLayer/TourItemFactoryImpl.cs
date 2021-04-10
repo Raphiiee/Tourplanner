@@ -30,5 +30,10 @@ namespace Tourplanner.BusinessLayer
         {
             tourItemDAO.DeleteItems(deleteTourItem);
         }
+
+        public void DeleteLogItem(LogItem deleteLogItem)
+        {
+            tourItemDAO.DeleteLogItems(deleteLogItem);
+        }
     }
 }

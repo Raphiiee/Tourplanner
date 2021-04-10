@@ -12,7 +12,10 @@ namespace Tourplanner.ViewModels
         private ICommand _clearCommand;
         private ICommand _addTourCommand;
         private ICommand _deleteTourCommand;
+        private ICommand _deleteLogCommand;
+        private ICommand _addLogCommand;
         private TourItem _currentItem;
+        private LogItem _currentLogItem;
         private ITourItemFactory _tourItemFactory;
         private string _searchName;
 
@@ -20,6 +23,8 @@ namespace Tourplanner.ViewModels
         public ICommand ClearCommand => _clearCommand ??= new RelayCommand(Clear);
         public ICommand AddTourCommand => _addTourCommand ??= new RelayCommand(AddTourItem);
         public ICommand DeleteTourCommand => _deleteTourCommand ??= new RelayCommand(DeleteTourItem);
+        public ICommand AddLogCommand => _addLogCommand ??= new RelayCommand(AddLogItem);
+        public ICommand DeleteLogCommand => _deleteLogCommand ??= new RelayCommand(DeleteLogItem);
 
         public ObservableCollection<TourItem> Items { get; set; }
 
@@ -35,6 +40,22 @@ namespace Tourplanner.ViewModels
                 {
                     _currentItem = value;
                     RaisePropertyChangedEvent(nameof(CurrentItem));
+                }
+            }
+        }
+
+        public LogItem CurrentLogItem
+        {
+            get
+            {
+                return _currentLogItem;
+            }
+            set
+            {
+                if (_currentLogItem != value && value != null)
+                {
+                    _currentLogItem = value;
+                    RaisePropertyChangedEvent(nameof(CurrentLogItem));
                 }
             }
         }
@@ -93,6 +114,8 @@ namespace Tourplanner.ViewModels
             {
                 Items.Add(item);
             }
+            
+            PreselectListviewItem();
         }
 
         private void Clear(object commandParameter)
@@ -121,6 +144,26 @@ namespace Tourplanner.ViewModels
             _tourItemFactory.DeleteTourItem(CurrentItem);
             Items.Remove(CurrentItem);
             PreselectListviewItem();
+        }
+
+        private void AddLogItem(object commandParameter)
+        {
+            //CurrentItem.Log.Add(new LogItem());
+            //RaisePropertyChangedEvent(nameof(Items));
+
+            int i = Items.IndexOf(CurrentItem);
+            Items[i].Log.Add(new LogItem());
+
+            RaisePropertyChangedEvent(nameof(Items));
+        }
+
+        private void DeleteLogItem(object commandParameter)
+        {
+            _tourItemFactory.DeleteLogItem(CurrentLogItem);
+            int i = Items.IndexOf(CurrentItem);
+            Items[i].Log.Remove(CurrentLogItem);
+
+            RaisePropertyChangedEvent(nameof(Items));
         }
 
     }
