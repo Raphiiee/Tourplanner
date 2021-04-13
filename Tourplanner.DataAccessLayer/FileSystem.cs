@@ -32,7 +32,7 @@ namespace Tourplanner.DataAccessLayer
         {
             return new List<TourItem>()
             {
-                new TourItem() {TourName = "New Tour"}
+                new TourItem() {TourName = "New Tour", Log = new ObservableCollection<LogItem>(){}}
             };
         }
 
