@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Tourplanner.BusinessLayer;
@@ -152,7 +153,7 @@ namespace Tourplanner.ViewModels
             //RaisePropertyChangedEvent(nameof(Items));
 
             int i = Items.IndexOf(CurrentItem);
-            Items[i].Log.Add(new LogItem());
+            Items[i].Log.Add(new LogItem(){Date = DateTime.Now});
 
             RaisePropertyChangedEvent(nameof(Items));
         }

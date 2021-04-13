@@ -16,7 +16,7 @@ namespace Tourplanner.DataAccessLayer
 
         public List<TourItem> GetItems()
         {
-            // get media items from file system
+            // get tour items from file system
             return new List<TourItem>()
             {
                 new TourItem() {TourId = 1, TourName = "Tour 1", Destination = "Wien",       Start = "Hollabrunn", Log = new ObservableCollection<LogItem>(){new LogItem(){Distance = "1112", Notice = "ABCD", Date = new DateTime(637535674210000000)}}},
@@ -30,9 +30,10 @@ namespace Tourplanner.DataAccessLayer
 
         public List<TourItem> AddItems()
         {
+            // needs to implemented
             return new List<TourItem>()
             {
-                new TourItem() {TourName = "New Tour", Log = new ObservableCollection<LogItem>(){}}
+                new TourItem() {TourName = "New Tour", Log = new ObservableCollection<LogItem>(){new LogItem(){Date = DateTime.Now}}}
             };
         }
 
