@@ -11,6 +11,11 @@ namespace Tourplanner.Models
         public int TourId { get; set; }
         public string Start { get; set; }
         public string Destination { get; set; }
+        public string TourDescription { get; set; }
+        public string RouteInformation { get; set; }
+        public string RouteImage { get; set; }
+        public int TourDistance { get; set; }
+        public RouteTypeEnum RouteType { get; set; }
 
     }
 }

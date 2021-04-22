@@ -15,6 +15,7 @@ namespace Tourplanner.ViewModels
         private ICommand _deleteTourCommand;
         private ICommand _deleteLogCommand;
         private ICommand _addLogCommand;
+        private ICommand _alterTourDetails;
         private TourItem _currentItem;
         private LogItem _currentLogItem;
         private ITourItemFactory _tourItemFactory;
@@ -26,8 +27,15 @@ namespace Tourplanner.ViewModels
         public ICommand DeleteTourCommand => _deleteTourCommand ??= new RelayCommand(DeleteTourItem);
         public ICommand AddLogCommand => _addLogCommand ??= new RelayCommand(AddLogItem);
         public ICommand DeleteLogCommand => _deleteLogCommand ??= new RelayCommand(DeleteLogItem);
+        public ICommand AlterTourDetailsCommand => _alterTourDetails ??= new RelayCommand(AlterTourDetails);
 
         public ObservableCollection<TourItem> Items { get; set; }
+
+        public TourFolderVM()
+        {
+            _tourItemFactory = TourItemFactory.GetInstance();
+            InitListBox();
+        }
 
         public TourItem CurrentItem
         {
@@ -77,11 +85,13 @@ namespace Tourplanner.ViewModels
             }
         }
 
-        public TourFolderVM()
+        public RouteTypeEnum[] PossibleRouteTypes => new RouteTypeEnum[]
         {
-            _tourItemFactory = TourItemFactory.GetInstance();
-            InitListBox();
-        }
+            RouteTypeEnum.Fastest,
+            RouteTypeEnum.Shortest,
+            RouteTypeEnum.Pedestrian,
+            RouteTypeEnum.Bicycle
+        };
 
         private void InitListBox()
         {
@@ -165,6 +175,11 @@ namespace Tourplanner.ViewModels
             Items[i].Log.Remove(CurrentLogItem);
 
             RaisePropertyChangedEvent(nameof(Items));
+        }
+
+        private void AlterTourDetails(object commandParameter)
+        {
+            _tourItemFactory.AlterTourDetails(_currentItem);
         }
 
     }
