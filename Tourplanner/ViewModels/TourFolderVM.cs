@@ -180,6 +180,8 @@ namespace Tourplanner.ViewModels
         private void AlterTourDetails(object commandParameter)
         {
             _tourItemFactory.AlterTourDetails(_currentItem);
+            RaisePropertyChangedEvent(nameof(CurrentItem));
+            RaisePropertyChangedEvent(nameof(Items));
         }
 
     }

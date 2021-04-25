@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Tourplanner.DataAccessLayer;
 using Tourplanner.Models;
 
@@ -38,7 +39,29 @@ namespace Tourplanner.BusinessLayer
 
         public void AlterTourDetails(TourItem alterTourItem)
         {
+            string tourDataJson = tourItemDAO.GetTourData(alterTourItem);
+
+            JObject jsonObject = JObject.Parse(tourDataJson);
+
+            alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
+            alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
+            int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
+            string errorMessage = (string) jsonObject["route"]?["routeError"]?["message"];
+
+            alterTourItem.RouteInformation = $"Directions of Route From {alterTourItem.Start} to {alterTourItem.Destination}\n" +
+                                             $"Tour distance: {alterTourItem.TourDistance}km\n" +
+                                             $"Tour Time: {jsonObject["route"]?["formattedTime"]}\n---------------\n";
+            
+            foreach (var maneuversSource in (JArray) jsonObject["route"]?["legs"]?[0]?["maneuvers"])
+            {
+                alterTourItem.RouteInformation += $"{(int)maneuversSource["index"]+1}. {maneuversSource["narrative"]}; \n" +
+                                                  $"\tDirection distance {maneuversSource["distance"]}km; \n" +
+                                                  $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
+            }
+
             tourItemDAO.AlterTourDetails(alterTourItem);
         }
+
+        
     }
 }

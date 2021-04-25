@@ -14,7 +14,8 @@ namespace Tourplanner.Models
         public string TourDescription { get; set; }
         public string RouteInformation { get; set; }
         public string RouteImage { get; set; }
-        public int TourDistance { get; set; }
+        public float TourDistance { get; set; }
+        public float FuelUsed { get; set; }
         public RouteTypeEnum RouteType { get; set; }
 
     }

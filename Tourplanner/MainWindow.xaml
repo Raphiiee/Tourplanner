@@ -109,7 +109,9 @@
 
                     </TabItem>
                     <TabItem Header="Description">
-
+                        <ScrollViewer>
+                            <TextBlock Text="{Binding CurrentItem.RouteInformation}" Foreground="White"></TextBlock>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Options">
                         <Grid>
