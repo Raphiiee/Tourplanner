@@ -16,6 +16,8 @@ namespace Tourplanner.ViewModels
         private ICommand _deleteLogCommand;
         private ICommand _addLogCommand;
         private ICommand _alterTourDetails;
+        private ICommand _printSpecificTourReport;
+        private ICommand _printSumerizeTourReport;
         private TourItem _currentItem;
         private LogItem _currentLogItem;
         private ITourItemFactory _tourItemFactory;
@@ -28,6 +30,8 @@ namespace Tourplanner.ViewModels
         public ICommand AddLogCommand => _addLogCommand ??= new RelayCommand(AddLogItem);
         public ICommand DeleteLogCommand => _deleteLogCommand ??= new RelayCommand(DeleteLogItem);
         public ICommand AlterTourDetailsCommand => _alterTourDetails ??= new RelayCommand(AlterTourDetails);
+        public ICommand PrintSpecificTourReportCommand => _printSpecificTourReport ??= new RelayCommand(PrintSpecificTourReport);
+        public ICommand PrintSumerizeTourReportCommand => _printSumerizeTourReport ??= new RelayCommand(PrintSumerizeTourReport);
 
         public ObservableCollection<TourItem> Items { get; set; }
 
@@ -180,8 +184,19 @@ namespace Tourplanner.ViewModels
         private void AlterTourDetails(object commandParameter)
         {
             _tourItemFactory.AlterTourDetails(_currentItem);
+            _tourItemFactory.CleanUpImages(Items);
             RaisePropertyChangedEvent(nameof(CurrentItem));
             RaisePropertyChangedEvent(nameof(Items));
+        }
+
+        private void PrintSpecificTourReport(object commandParameter)
+        {
+
+        }
+
+        private void PrintSumerizeTourReport(object commandParameter)
+        {
+
         }
 
     }

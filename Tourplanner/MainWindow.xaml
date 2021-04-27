@@ -107,6 +107,7 @@
 
                     <TabItem Header="Route">
 
+                        <Image Source="{Binding CurrentItem.RouteImage, UpdateSourceTrigger=PropertyChanged}"></Image>
                     </TabItem>
                     <TabItem Header="Description">
                         <ScrollViewer>
