@@ -41,4 +41,8 @@
     <ProjectReference Include="..\Tourplanner.Models\Tourplanner.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\TourMaps\" />
+  </ItemGroup>
+
 </Project>

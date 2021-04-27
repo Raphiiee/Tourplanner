@@ -159,9 +159,6 @@ namespace Tourplanner.ViewModels
 
         private void AddLogItem(object commandParameter)
         {
-            //CurrentItem.Log.Add(new LogItem());
-            //RaisePropertyChangedEvent(nameof(Items));
-
             int i = Items.IndexOf(CurrentItem);
             Items[i].Log.Add(new LogItem(){Date = DateTime.Now});
 
@@ -179,9 +176,11 @@ namespace Tourplanner.ViewModels
 
         private void AlterTourDetails(object commandParameter)
         {
+            
             _tourItemFactory.AlterTourDetails(_currentItem);
             RaisePropertyChangedEvent(nameof(CurrentItem));
             RaisePropertyChangedEvent(nameof(Items));
+            _tourItemFactory.CleanUpImages(Items);
         }
 
     }

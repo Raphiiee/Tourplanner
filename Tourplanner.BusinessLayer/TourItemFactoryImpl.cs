@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Tourplanner.DataAccessLayer;
@@ -45,6 +46,8 @@ namespace Tourplanner.BusinessLayer
 
             alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
             alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
+            alterTourItem.RouteSessionID = (string) jsonObject["route"]?["sessionId"];
+
             int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
             string errorMessage = (string) jsonObject["route"]?["routeError"]?["message"];
 
@@ -59,9 +62,19 @@ namespace Tourplanner.BusinessLayer
                                                   $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
             }
 
+            tourItemDAO.GetTourMapImage(alterTourItem);
+
             tourItemDAO.AlterTourDetails(alterTourItem);
         }
 
-        
+        public void GetImage(TourItem tourItem)
+        {
+            tourItemDAO.GetTourMapImage(tourItem);
+        }
+
+        public void CleanUpImages(ObservableCollection<TourItem> tourItems)
+        {
+            tourItemDAO.CleanUpImages(tourItems);
+        }
     }
 }
