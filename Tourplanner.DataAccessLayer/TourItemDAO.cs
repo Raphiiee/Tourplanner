@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Windows.Media.Imaging;
 using Tourplanner.Models;
 
 namespace Tourplanner.DataAccessLayer
@@ -60,6 +63,58 @@ namespace Tourplanner.DataAccessLayer
             Console.WriteLine(data);
 
             return data;
+        }
+
+        public void GetTourMapImage(TourItem tourItem)
+        {
+            string apiKey = ConfigurationManager.AppSettings.Get("MQApiKey");
+            string url = $"https://www.mapquestapi.com/staticmap/v5/map?key={apiKey}&start={tourItem.Start}&end={tourItem.Destination}&session={tourItem.RouteSessionID}&size=800,400";
+            string filename = Path.GetRandomFileName() + ".png";
+            string imagePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + 
+                               ConfigurationManager.AppSettings.Get("MapFolder");
+            
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
+
+            imagePath = imagePath + filename;
+            WebClient mapWebClient = new WebClient();
+            mapWebClient.DownloadFile(url,imagePath);
+
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(imagePath);
+            image.EndInit();
+
+            tourItem.RouteImage = image;
+            tourItem.RouteImagePath = imagePath;
+        }
+
+        public void CleanUpImages(ObservableCollection<TourItem> tourItems)
+        {
+            string mapFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                               ConfigurationManager.AppSettings.Get("MapFolder");
+            DirectoryInfo directory = new DirectoryInfo(mapFolderPath);
+
+            foreach (var file in directory.GetFiles("*.png"))
+            {
+                bool delete = true;
+                foreach (var tour in tourItems)
+                {
+                    if (tour.RouteImagePath != null && tour.RouteImagePath.Contains(file.Name) )
+                    {
+                        delete = false;
+                        break;
+                    }
+                }
+
+                if (delete)
+                {
+                    File.Delete(file.FullName);
+                }
+            }
         }
     }
 }

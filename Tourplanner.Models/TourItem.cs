@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
 
 namespace Tourplanner.Models
 {
@@ -13,7 +14,9 @@ namespace Tourplanner.Models
         public string Destination { get; set; }
         public string TourDescription { get; set; }
         public string RouteInformation { get; set; }
-        public string RouteImage { get; set; }
+        public string RouteSessionID { get; set; }
+        public BitmapImage RouteImage { get; set; }
+        public string RouteImagePath { get; set; }
         public float TourDistance { get; set; }
         public float FuelUsed { get; set; }
         public RouteTypeEnum RouteType { get; set; }
