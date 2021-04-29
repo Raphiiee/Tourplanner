@@ -14,5 +14,7 @@ namespace Tourplanner.BusinessLayer
         void AlterTourDetails(TourItem alterTourItem);
         void GetImage(TourItem tourItem);
         void CleanUpImages(ObservableCollection<TourItem> tourItems);
+        void PrintSpecificTourReport(TourItem tourItem);
+        void PrintSumerizeTourReport(ObservableCollection<TourItem> tourItems);
     }
 }

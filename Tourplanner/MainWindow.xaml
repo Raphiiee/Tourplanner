@@ -85,7 +85,7 @@
                 <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour" Command="{Binding DeleteTourCommand}">
                     <Image Source="Images/minus-sign.png"/>
                 </Button>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Print a Tour">
+                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Print the Summerize Tour Report" Command="{Binding PrintSumerizeTourReportCommand}">
                     <Image Source="Images/printer.png"/>
                 </Button>
                 <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Reload your Tours">
@@ -195,9 +195,9 @@
                             </ItemsPanelTemplate>  
                         </Menu.ItemsPanel> 
                         <MenuItem Header="Logs" Grid.Column="0"/>
-                        <MenuItem Grid.Column="1" Command="{Binding AddLogCommand}"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="2" Command="{Binding DeleteLogCommand}"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="3"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="1" Command="{Binding AddLogCommand}"                  ToolTip="Add Log entry"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="2" Command="{Binding DeleteLogCommand}"               ToolTip="Delete Log entry"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Grid.Column="3" Command="{Binding PrintSpecificTourReportCommand}" ToolTip="Print Specific Tour Report"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
                     </Menu>
                     <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding CurrentItem.Log}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding CurrentLogItem}">
                         <DataGrid.Columns>

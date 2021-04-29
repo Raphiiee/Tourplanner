@@ -189,12 +189,12 @@ namespace Tourplanner.ViewModels
 
         private void PrintSpecificTourReport(object commandParameter)
         {
-
+            _tourItemFactory.PrintSpecificTourReport(_currentItem);
         }
 
         private void PrintSumerizeTourReport(object commandParameter)
         {
-
+            _tourItemFactory.PrintSumerizeTourReport(Items);
         }
 
     }
