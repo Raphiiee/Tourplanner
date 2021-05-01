@@ -13,6 +13,7 @@ namespace Tourplanner.DataAccessLayer
 {
     public class TourItemDAO
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourItemDAO.cs");
         private IDataAccess dataAccess;
 
         public TourItemDAO()
@@ -47,6 +48,7 @@ namespace Tourplanner.DataAccessLayer
 
         public string GetTourData(TourItem tourItem)
         {
+            log.Info($"Try to get tour data");
             string apiKey = ConfigurationManager.AppSettings.Get("MQApiKey");
             string routeType = tourItem.RouteType.ToString();
             string url = $"https://www.mapquestapi.com/directions/v2/route?key={apiKey}&from={tourItem.Start}&to={tourItem.Destination}&routeType={routeType}&locale=de_DE&unit=k";
@@ -67,6 +69,7 @@ namespace Tourplanner.DataAccessLayer
 
         public void GetTourMapImage(TourItem tourItem)
         {
+            log.Info($"Try to get tour image");
             string apiKey = ConfigurationManager.AppSettings.Get("MQApiKey");
             string url = $"https://www.mapquestapi.com/staticmap/v5/map?key={apiKey}&start={tourItem.Start}&end={tourItem.Destination}&session={tourItem.RouteSessionID}&size=800,400";
             string filename = Path.GetRandomFileName() + ".png";
@@ -94,6 +97,7 @@ namespace Tourplanner.DataAccessLayer
 
         public void CleanUpImages(ObservableCollection<TourItem> tourItems)
         {
+            log.Info($"Try to delete unwanted images");
             string mapFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                                ConfigurationManager.AppSettings.Get("MapFolder");
             DirectoryInfo directory = new DirectoryInfo(mapFolderPath);

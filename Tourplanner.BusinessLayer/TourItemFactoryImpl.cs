@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -24,6 +25,7 @@ namespace Tourplanner.BusinessLayer
     public class TourItemFactoryImpl : ITourItemFactory
     {
         private TourItemDAO tourItemDAO = new TourItemDAO();
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourItemFactoryImpl.cs");
 
         public IEnumerable<TourItem> GetItems()
         {
@@ -33,8 +35,10 @@ namespace Tourplanner.BusinessLayer
         public IEnumerable<TourItem> Search(string itemName)
         {
             IEnumerable<TourItem> items = GetItems();
+            items = items.Where(x => x.TourName.ToLower().Contains(itemName.ToLower()));
+            log.Info($"Found {items.Count()} for the search term {itemName}");
 
-            return items.Where(x => x.TourName.ToLower().Contains(itemName.ToLower()));
+            return items;
         }
 
         public IEnumerable<TourItem> AddTourItem()
@@ -55,26 +59,46 @@ namespace Tourplanner.BusinessLayer
         public void AlterTourDetails(TourItem alterTourItem)
         {
             string tourDataJson = tourItemDAO.GetTourData(alterTourItem);
+            string infoCode = "";
+            string infoMessage = "";
 
-            JObject jsonObject = JObject.Parse(tourDataJson);
-
-            alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
-            alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
-            alterTourItem.RouteSessionID = (string) jsonObject["route"]?["sessionId"];
-
-            int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
-            string errorMessage = (string) jsonObject["route"]?["routeError"]?["message"];
-
-            alterTourItem.RouteInformation = $"Directions of Route From {alterTourItem.Start} to {alterTourItem.Destination}\n" +
-                                             $"Tour distance: {alterTourItem.TourDistance}km\n" +
-                                             $"Tour Time: {jsonObject["route"]?["formattedTime"]}\n---------------\n";
-            
-            foreach (var maneuversSource in (JArray) jsonObject["route"]?["legs"]?[0]?["maneuvers"])
+            try
             {
-                alterTourItem.RouteInformation += $"{(int)maneuversSource["index"]+1}. {maneuversSource["narrative"]}; \n" +
-                                                  $"\tDirection distance {maneuversSource["distance"]}km; \n" +
-                                                  $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
+                log.Info($"Try to Parse JSON from Tour Data");
+                JObject jsonObject = JObject.Parse(tourDataJson);
+                int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
+                if (errorCode > 0)
+                {
+                    infoCode = (string) jsonObject["info"]?["statuscode"];
+                    infoMessage = (string) jsonObject["info"]?["messages"]?[0];
+                    throw new ArgumentException($"Tour not Valid Error Code: {errorCode}; Info Code: {infoCode}; Info Messsage: {infoMessage}");
+                }
+                alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
+                alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
+                alterTourItem.RouteSessionID = (string) jsonObject["route"]?["sessionId"];
+
+
+                alterTourItem.RouteInformation = $"Directions of Route From {alterTourItem.Start} to {alterTourItem.Destination}\n" +
+                                                 $"Tour distance: {alterTourItem.TourDistance}km\n" +
+                                                 $"Tour Time: {jsonObject["route"]?["formattedTime"]}\n---------------\n";
+
+                JToken maneuverArray = (JArray) jsonObject["route"]?["legs"]?[0]?["maneuvers"];
+                if (maneuverArray != null)
+                    foreach (var maneuversSource in maneuverArray)
+                    {
+                        alterTourItem.RouteInformation +=
+                            $"{(int) maneuversSource["index"] + 1}. {maneuversSource["narrative"]}; \n" +
+                            $"\tDirection distance {maneuversSource["distance"]}km; \n" +
+                            $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
+                    }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                log.Error(e);
+            }
+            
+            
 
             tourItemDAO.GetTourMapImage(alterTourItem);
 
@@ -93,6 +117,7 @@ namespace Tourplanner.BusinessLayer
 
         public void PrintSpecificTourReport(TourItem tourItem)
         {
+            log.Info($"Generating PDF '{tourItem.TourName}.pdf' from Tour Data");
             string documentName = $"{tourItem.TourName}.pdf";
             var writer = new PdfWriter(documentName);
             var pdf = new PdfDocument(writer);
@@ -146,6 +171,7 @@ namespace Tourplanner.BusinessLayer
 
         public void PrintSumerizeTourReport(ObservableCollection<TourItem> tourItems)
         {
+            log.Info($"Generating Summerize Tour Report");
             string documentName = "Summerize Report.pdf";
             var writer = new PdfWriter(documentName);
             var pdf = new PdfDocument(writer);
@@ -215,11 +241,21 @@ namespace Tourplanner.BusinessLayer
 
         private void MakeReport(PdfDocument pdf, Document document, string documentName)
         {
+            log.Info($"Make PDF");
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + $"\\{documentName}";
             document.Close();
-            
-            var p = new Process {StartInfo = new ProcessStartInfo(path) {UseShellExecute = true}};
-            p.Start();
+
+            try
+            {
+                log.Info($"Try to open Generated PDF");
+                var p = new Process {StartInfo = new ProcessStartInfo(path) {UseShellExecute = true}};
+                p.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                log.Error(e);
+            }
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Tourplanner.BusinessLayer;
 using Tourplanner.Models;
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+
 
 namespace Tourplanner.ViewModels
 {
@@ -22,6 +24,7 @@ namespace Tourplanner.ViewModels
         private LogItem _currentLogItem;
         private ITourItemFactory _tourItemFactory;
         private string _searchName;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourFolderVM.cs");
 
         public ICommand SearchCommand => _searchCommand ??= new RelayCommand(Search);
         public ICommand ClearCommand => _clearCommand ??= new RelayCommand(Clear);
@@ -99,6 +102,7 @@ namespace Tourplanner.ViewModels
 
         private void InitListBox()
         {
+            log.Info("Init Programm");
             Items = new ObservableCollection<TourItem>();
             FillListBox();
         }
@@ -123,6 +127,7 @@ namespace Tourplanner.ViewModels
 
         private void Search(object commandParameter)
         {
+            log.Info($"Search for {SearchName} in tour data");
             IEnumerable foundItems = _tourItemFactory.Search(SearchName);
             Items.Clear();
             foreach (TourItem item in foundItems)
@@ -135,6 +140,7 @@ namespace Tourplanner.ViewModels
 
         private void Clear(object commandParameter)
         {
+            log.Info("Clear Search");
             Items.Clear();
             SearchName = "";
             FillListBox();
