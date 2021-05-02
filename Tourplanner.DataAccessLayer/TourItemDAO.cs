@@ -19,8 +19,8 @@ namespace Tourplanner.DataAccessLayer
         public TourItemDAO()
         {
             // Check which datasource to use
-            // dataAccess = new Database();
-             dataAccess = new FileSystem();
+            dataAccess = Database.Instance();
+            //dataAccess = new FileSystem();
         }
         
         public List<TourItem> GetItems()
