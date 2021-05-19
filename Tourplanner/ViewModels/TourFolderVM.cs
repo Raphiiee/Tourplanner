@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Tourplanner.BusinessLayer;
@@ -17,11 +18,12 @@ namespace Tourplanner.ViewModels
         private ICommand _deleteTourCommand;
         private ICommand _deleteLogCommand;
         private ICommand _addLogCommand;
+        private ICommand _alterLogCommand;
         private ICommand _alterTourDetails;
         private ICommand _printSpecificTourReport;
         private ICommand _printSumerizeTourReport;
-        private TourItem _currentItem;
-        private LogItem _currentLogItem;
+        private TourItem _selectedTourItem;
+        private LogItem _selectedLogItem;
         private ITourItemFactory _tourItemFactory;
         private string _searchName;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourFolderVM.cs");
@@ -32,11 +34,12 @@ namespace Tourplanner.ViewModels
         public ICommand DeleteTourCommand => _deleteTourCommand ??= new RelayCommand(DeleteTourItem);
         public ICommand AddLogCommand => _addLogCommand ??= new RelayCommand(AddLogItem);
         public ICommand DeleteLogCommand => _deleteLogCommand ??= new RelayCommand(DeleteLogItem);
+        public ICommand AlterLogCommand => _alterLogCommand ??= new RelayCommand(AlterLogItem);
         public ICommand AlterTourDetailsCommand => _alterTourDetails ??= new RelayCommand(AlterTourDetails);
         public ICommand PrintSpecificTourReportCommand => _printSpecificTourReport ??= new RelayCommand(PrintSpecificTourReport);
         public ICommand PrintSumerizeTourReportCommand => _printSumerizeTourReport ??= new RelayCommand(PrintSumerizeTourReport);
 
-        public ObservableCollection<TourItem> Items { get; set; }
+        public ObservableCollection<TourItem> TourItemsList { get; set; }
 
         public TourFolderVM()
         {
@@ -44,34 +47,34 @@ namespace Tourplanner.ViewModels
             InitListBox();
         }
 
-        public TourItem CurrentItem
+        public TourItem SelectedTourItem
         {
             get
             {
-                return _currentItem;
+                return _selectedTourItem;
             }
             set
             {
-                if (_currentItem != value && value != null)
+                if (_selectedTourItem != value && value != null)
                 {
-                    _currentItem = value;
-                    RaisePropertyChangedEvent(nameof(CurrentItem));
+                    _selectedTourItem = value;
+                    RaisePropertyChangedEvent(nameof(SelectedTourItem));
                 }
             }
         }
 
-        public LogItem CurrentLogItem
+        public LogItem SelectedLogItem
         {
             get
             {
-                return _currentLogItem;
+                return _selectedLogItem;
             }
             set
             {
-                if (_currentLogItem != value && value != null)
+                if (_selectedLogItem != value && value != null)
                 {
-                    _currentLogItem = value;
-                    RaisePropertyChangedEvent(nameof(CurrentLogItem));
+                    _selectedLogItem = value;
+                    RaisePropertyChangedEvent(nameof(SelectedLogItem));
                 }
             }
         }
@@ -103,7 +106,7 @@ namespace Tourplanner.ViewModels
         private void InitListBox()
         {
             log.Info("Init Programm");
-            Items = new ObservableCollection<TourItem>();
+            TourItemsList = new ObservableCollection<TourItem>();
             FillListBox();
         }
 
@@ -111,7 +114,7 @@ namespace Tourplanner.ViewModels
         {
             foreach (TourItem item in _tourItemFactory.GetItems())
             {
-                Items.Add(item);
+                TourItemsList.Add(item);
             }
 
             PreselectListviewItem();
@@ -119,9 +122,9 @@ namespace Tourplanner.ViewModels
 
         private void PreselectListviewItem()
         {
-            if (Items.Count > 0)
+            if (TourItemsList.Count > 0)
             {
-                CurrentItem = Items[0];
+                SelectedTourItem = TourItemsList[0];
             }
         }
 
@@ -129,10 +132,10 @@ namespace Tourplanner.ViewModels
         {
             log.Info($"Search for {SearchName} in tour data");
             IEnumerable foundItems = _tourItemFactory.Search(SearchName);
-            Items.Clear();
+            TourItemsList.Clear();
             foreach (TourItem item in foundItems)
             {
-                Items.Add(item);
+                TourItemsList.Add(item);
             }
             
             PreselectListviewItem();
@@ -141,7 +144,7 @@ namespace Tourplanner.ViewModels
         private void Clear(object commandParameter)
         {
             log.Info("Clear Search");
-            Items.Clear();
+            TourItemsList.Clear();
             SearchName = "";
             FillListBox();
         }
@@ -151,10 +154,10 @@ namespace Tourplanner.ViewModels
             IEnumerable newItem = _tourItemFactory.AddTourItem();
             foreach (TourItem item in newItem)
             {
-                Items.Add(item);
+                TourItemsList.Add(item);
             }
 
-            if (Items.Count < 2)
+            if (TourItemsList.Count < 2)
             {
                 PreselectListviewItem();
             }
@@ -162,45 +165,56 @@ namespace Tourplanner.ViewModels
 
         private void DeleteTourItem(object commandParameter)
         {
-            _tourItemFactory.DeleteTourItem(CurrentItem);
-            Items.Remove(CurrentItem);
+            _tourItemFactory.DeleteTourItem(SelectedTourItem);
+            TourItemsList.Remove(SelectedTourItem);
             PreselectListviewItem();
         }
 
         private void AddLogItem(object commandParameter)
         {
-            int i = Items.IndexOf(CurrentItem);
-            Items[i].Log.Add(new LogItem(){Date = DateTime.Now});
+            SelectedLogItem = new LogItem();
+            // Add new logitem in database
+            _tourItemFactory.AddLogItem(SelectedLogItem, SelectedTourItem);
+            // Index of Selected Tour Item in Listbox
+            int i = TourItemsList.IndexOf(SelectedTourItem);
+            // Add new Log Item at selected Tour Item index
+            TourItemsList[i].Log.Add(SelectedLogItem);
+            
 
-            RaisePropertyChangedEvent(nameof(Items));
+            RaisePropertyChangedEvent(nameof(TourItemsList));
         }
 
         private void DeleteLogItem(object commandParameter)
         {
-            _tourItemFactory.DeleteLogItem(CurrentLogItem);
-            int i = Items.IndexOf(CurrentItem);
-            Items[i].Log.Remove(CurrentLogItem);
+            _tourItemFactory.DeleteLogItem(SelectedLogItem);
+            int i = TourItemsList.IndexOf(SelectedTourItem);
+            TourItemsList[i].Log.Remove(SelectedLogItem);
 
-            RaisePropertyChangedEvent(nameof(Items));
+            RaisePropertyChangedEvent(nameof(TourItemsList));
+        }
+
+        private void AlterLogItem(object commandParameter)
+        {
+            _tourItemFactory.AlterLogItem(SelectedTourItem);
         }
 
         private void AlterTourDetails(object commandParameter)
         {
             
-            _tourItemFactory.AlterTourDetails(_currentItem);
-            _tourItemFactory.CleanUpImages(Items);
-            RaisePropertyChangedEvent(nameof(CurrentItem));
-            RaisePropertyChangedEvent(nameof(Items));
+            _tourItemFactory.AlterTourDetails(_selectedTourItem);
+            _tourItemFactory.CleanUpImages(TourItemsList);
+            RaisePropertyChangedEvent(nameof(SelectedTourItem));
+            RaisePropertyChangedEvent(nameof(TourItemsList));
         }
 
         private void PrintSpecificTourReport(object commandParameter)
         {
-            _tourItemFactory.PrintSpecificTourReport(_currentItem);
+            _tourItemFactory.PrintSpecificTourReport(_selectedTourItem);
         }
 
         private void PrintSumerizeTourReport(object commandParameter)
         {
-            _tourItemFactory.PrintSumerizeTourReport(Items);
+            _tourItemFactory.PrintSumerizeTourReport(TourItemsList);
         }
 
     }

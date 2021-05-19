@@ -11,6 +11,8 @@ namespace Tourplanner.BusinessLayer
         IEnumerable<TourItem> AddTourItem();
         void DeleteTourItem(TourItem deleteTourItem);
         void DeleteLogItem(LogItem deleteLogItem);
+        void AddLogItem(LogItem addLogItem, TourItem selectedTourItem);
+        void AlterLogItem(TourItem selectedTourItem);
         void AlterTourDetails(TourItem alterTourItem);
         void GetImage(TourItem tourItem);
         void CleanUpImages(ObservableCollection<TourItem> tourItems);

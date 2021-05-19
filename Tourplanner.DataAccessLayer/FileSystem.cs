@@ -52,10 +52,20 @@ namespace Tourplanner.DataAccessLayer
             // Delete Log ITEM from fileSystem
         }
 
+        public void AlterLogItems(LogItem alterItem)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AlterTourDetails(TourItem alterTourItem)
         {
             log.Info($"Try to alter touritem");
             // Alter Log Item in FileSystem
+        }
+
+        public void AddLogItems(LogItem addLogItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }

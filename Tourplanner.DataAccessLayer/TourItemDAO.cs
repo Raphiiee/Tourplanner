@@ -16,11 +16,16 @@ namespace Tourplanner.DataAccessLayer
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourItemDAO.cs");
         private IDataAccess dataAccess;
 
-        public TourItemDAO()
+        public TourItemDAO(int option=0)
         {
-            // Check which datasource to use
-            dataAccess = Database.Instance();
-            //dataAccess = new FileSystem();
+            if (option == 0)
+            {
+                dataAccess = Database.Instance();
+            }
+            else
+            {
+                dataAccess = new FileSystem();
+            }
         }
         
         public List<TourItem> GetItems()
@@ -39,6 +44,15 @@ namespace Tourplanner.DataAccessLayer
         public void DeleteLogItems(LogItem deleteLogItem)
         {
             dataAccess.DeleteLogItems(deleteLogItem);
+        }
+
+        public void AddLogItems(LogItem addLogItem)
+        {
+            dataAccess.AddLogItems(addLogItem);
+        }
+        public void AlterLogItems(LogItem logItem)
+        {
+            dataAccess.AlterLogItems(logItem);
         }
 
         public void AlterTourDetails(TourItem alterTourItem)
@@ -118,6 +132,8 @@ namespace Tourplanner.DataAccessLayer
                 {
                     File.Delete(file.FullName);
                 }
+
+
             }
         }
     }

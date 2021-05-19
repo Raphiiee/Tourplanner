@@ -7,16 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Images\TourMaps\**" />
+    <EmbeddedResource Remove="Images\TourMaps\**" />
+    <None Remove="Images\TourMaps\**" />
+    <Page Remove="Images\TourMaps\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\fire-extinguisher.png" />
+    <None Remove="Images\floppy-disk.png" />
     <None Remove="Images\minus-sign.png" />
     <None Remove="Images\plus-sign.png" />
     <None Remove="Images\printer.png" />
-    <None Remove="Images\reload.png" />
     <None Remove="Images\right-pointing-magnifying-glass.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\fire-extinguisher.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\floppy-disk.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\minus-sign.png">
@@ -26,9 +36,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\printer.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\reload.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\right-pointing-magnifying-glass.png">
@@ -42,11 +49,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\TourMaps\" />
+    <PackageReference Include="log4net" Version="2.0.12" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <None Update="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ namespace Tourplanner.Models
     public class LogItem
     {
         public int TourId { get; set; }
+        public int LogId { get; set; }
         public DateTime Date { get; set; }
         public int DurationTime { get; set; }
         public int Distance { get; set; }

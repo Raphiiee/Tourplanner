@@ -34,11 +34,36 @@ namespace Tourplanner.BusinessLayer
 
         public IEnumerable<TourItem> Search(string itemName)
         {
-            IEnumerable<TourItem> items = GetItems();
-            items = items.Where(x => x.TourName.ToLower().Contains(itemName.ToLower()));
-            log.Info($"Found {items.Count()} for the search term {itemName}");
+            itemName = itemName.ToLower();
+            IEnumerable<TourItem> allItems = GetItems();
+            List<TourItem> foundItems = new List<TourItem>();
 
-            return items;
+            foreach (var tourItem in allItems)
+            {
+                if (tourItem.Destination.ToLower().Contains(itemName)
+                    || tourItem.Start.ToLower().Contains(itemName)
+                    || tourItem.TourDescription.ToLower().Contains(itemName)
+                    || tourItem.RouteInformation.ToLower().Contains(itemName)
+                    || tourItem.TourName.ToLower().Contains(itemName))
+                {
+                    foundItems.Add(tourItem);
+                    continue;
+                }
+
+                foreach (var logItem in tourItem.Log)
+                {
+                    if (logItem.Weather.ToLower().Contains(itemName)
+                        || logItem.Notice.ToLower().Contains(itemName)
+                        || logItem.Rating.ToLower().Contains(itemName))
+                    {
+                        foundItems.Add(tourItem);
+                    }
+                }
+            }
+            
+            log.Info($"Found {foundItems.Count()} for the search term {itemName}");
+
+            return foundItems;
         }
 
         public IEnumerable<TourItem> AddTourItem()
@@ -49,6 +74,22 @@ namespace Tourplanner.BusinessLayer
         public void DeleteTourItem(TourItem deleteTourItem)
         {
             tourItemDAO.DeleteItems(deleteTourItem);
+        }
+
+        public void AddLogItem(LogItem addLogItem, TourItem selectedTourItem)
+        {
+            addLogItem.Date = DateTime.Now; 
+            addLogItem.TourId = selectedTourItem.TourId;
+            tourItemDAO.AddLogItems(addLogItem);
+        }
+
+        public void AlterLogItem(TourItem selectedTourItem)
+        {
+            foreach (var logItem in selectedTourItem.Log)
+            {
+                tourItemDAO.AlterLogItems(logItem);
+            }
+            
         }
 
         public void DeleteLogItem(LogItem deleteLogItem)
@@ -228,7 +269,7 @@ namespace Tourplanner.BusinessLayer
             document.Add(new Paragraph($"You Walked {elevaitionGainUp}m up"));
             document.Add(new Paragraph($"You Walked {elevaitionGainDown}m down"));
             document.Add(new Paragraph($"Total Tour Duration: {durationTime} minutes"));
-            document.Add(new Paragraph($"Total Tour Distance: {totalTourKilometers} minutes"));
+            document.Add(new Paragraph($"Total Tour Distance: {totalTourKilometers}km"));
             document.Add(new Paragraph($"Total Tour Sleep time: {sleepTime} minutes"));
             document.Add(new Paragraph($"Total Tour Step Counter: {stepCounter} Steps"));
             document.Add(new Paragraph($"Total Tour Intake Calories: {intakeCalories} Calories"));
