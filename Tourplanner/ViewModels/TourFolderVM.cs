@@ -151,11 +151,8 @@ namespace Tourplanner.ViewModels
 
         private void AddTourItem(object commandParameter)
         {
-            IEnumerable newItem = _tourItemFactory.AddTourItem();
-            foreach (TourItem item in newItem)
-            {
-                TourItemsList.Add(item);
-            }
+            TourItem newItem = _tourItemFactory.AddTourItem();
+            TourItemsList.Add(newItem);
 
             if (TourItemsList.Count < 2)
             {

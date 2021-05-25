@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.IO;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using Npgsql;
@@ -74,7 +75,7 @@ namespace Tourplanner.DataAccessLayer
                     Log = new ObservableCollection<LogItem>(){},
                 };
 
-                if (temp.RouteImagePath.Contains(".png"))
+                if (temp.RouteImagePath.Contains(".png") && File.Exists(temp.RouteImagePath))
                 {
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
@@ -127,7 +128,7 @@ namespace Tourplanner.DataAccessLayer
             return tours;
         }
 
-        public List<TourItem> AddItems()
+        public TourItem AddItems()
         {
             log.Info($"Try to add a new tour to database");
             string sql = "SELECT add_new_tour()";
@@ -144,9 +145,9 @@ namespace Tourplanner.DataAccessLayer
             }
             _conn.Close();
             
-            return new List<TourItem>()
+            return new TourItem()
             {
-                new TourItem() {TourName = "New Tour", TourId = tourId}
+                TourName = "New Tour", TourId = tourId, Log = new ObservableCollection<LogItem>(){new LogItem(){Date = DateTime.Now}}
             };
         }
 

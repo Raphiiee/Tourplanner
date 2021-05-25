@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Tourplanner.DataAccessLayer;
 using Tourplanner.Models;
 
-namespace Tourplanner.Test
+namespace Tourplanner.Test.Tests
 {
     [TestFixture]
     public class DatabaseTest
@@ -36,11 +36,12 @@ namespace Tourplanner.Test
         public void AddItemTest()
         {
             int numberOfToursBevorAdd = _itemList.Count;
-            List<TourItem> itemListAfterAdd = _database.AddItems();
-            int numberOfToursAfterAdd = itemListAfterAdd.Count;
+            TourItem itemListAfterAdd = _database.AddItems();
+            _itemList.Add(itemListAfterAdd);
+            int numberOfToursAfterAdd = _itemList.Count;
 
-            Assert.Greater(numberOfToursBevorAdd, numberOfToursAfterAdd);
-            _testTourItem = itemListAfterAdd[^1];
+            Assert.Greater(numberOfToursAfterAdd, numberOfToursBevorAdd);
+            _testTourItem = itemListAfterAdd;
         }
 
         [Test]

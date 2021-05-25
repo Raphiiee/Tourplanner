@@ -22,6 +22,10 @@ namespace Tourplanner.DataAccessLayer
             {
                 dataAccess = Database.Instance();
             }
+            else if (option == 1)
+            {
+                dataAccess = Database.Instance(ConfigurationManager.AppSettings.Get("DBTest"));
+            }
             else
             {
                 dataAccess = new FileSystem();
@@ -32,7 +36,7 @@ namespace Tourplanner.DataAccessLayer
         {
             return dataAccess.GetItems();
         }
-        public List<TourItem> AddItems()
+        public TourItem AddItems()
         {
             return dataAccess.AddItems();
         }
@@ -116,25 +120,32 @@ namespace Tourplanner.DataAccessLayer
                                ConfigurationManager.AppSettings.Get("MapFolder");
             DirectoryInfo directory = new DirectoryInfo(mapFolderPath);
 
-            foreach (var file in directory.GetFiles("*.png"))
+            try
             {
-                bool delete = true;
-                foreach (var tour in tourItems)
+                foreach (var file in directory.GetFiles("*.png"))
                 {
-                    if (tour.RouteImagePath != null && tour.RouteImagePath.Contains(file.Name) )
+                    bool delete = true;
+                    foreach (var tour in tourItems)
                     {
-                        delete = false;
-                        break;
+                        if (tour.RouteImagePath != null && tour.RouteImagePath.Contains(file.Name) )
+                        {
+                            delete = false;
+                            break;
+                        }
+                    }
+
+                    if (delete)
+                    {
+                        File.Delete(file.FullName);
                     }
                 }
-
-                if (delete)
-                {
-                    File.Delete(file.FullName);
-                }
-
-
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            
         }
     }
 }

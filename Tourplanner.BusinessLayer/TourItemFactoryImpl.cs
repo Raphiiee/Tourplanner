@@ -18,7 +18,6 @@ using Newtonsoft.Json.Linq;
 using Tourplanner.DataAccessLayer;
 using Tourplanner.Models;
 using Path = System.IO.Path;
-using Rectangle = iText.Kernel.Geom.Rectangle;
 
 namespace Tourplanner.BusinessLayer
 {
@@ -27,15 +26,24 @@ namespace Tourplanner.BusinessLayer
         private TourItemDAO tourItemDAO = new TourItemDAO();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger("TourItemFactoryImpl.cs");
 
+        public void ChangeDataSource(int source)
+        {
+            tourItemDAO = new TourItemDAO(source);
+        }
+
         public IEnumerable<TourItem> GetItems()
         {
             return tourItemDAO.GetItems();
         }
 
-        public IEnumerable<TourItem> Search(string itemName)
+        public List<TourItem> Search(string itemName)
         {
-            itemName = itemName.ToLower();
             IEnumerable<TourItem> allItems = GetItems();
+            if (itemName is null || itemName == "")
+            {
+                return (List<TourItem>) allItems;
+            }
+            itemName = itemName.ToLower();
             List<TourItem> foundItems = new List<TourItem>();
 
             foreach (var tourItem in allItems)
@@ -50,15 +58,20 @@ namespace Tourplanner.BusinessLayer
                     continue;
                 }
 
-                foreach (var logItem in tourItem.Log)
+                if (!(tourItem.Log is null))
                 {
-                    if (logItem.Weather.ToLower().Contains(itemName)
-                        || logItem.Notice.ToLower().Contains(itemName)
-                        || logItem.Rating.ToLower().Contains(itemName))
-                    {
-                        foundItems.Add(tourItem);
+                    foreach (var logItem in tourItem.Log)
+                    { 
+                        if (logItem.Weather.ToLower().Contains(itemName)
+                          || logItem.Notice.ToLower().Contains(itemName)
+                          || logItem.Rating.ToLower().Contains(itemName))
+                        {
+                            foundItems.Add(tourItem);
+                        }
+
                     }
                 }
+                
             }
             
             log.Info($"Found {foundItems.Count()} for the search term {itemName}");
@@ -66,7 +79,7 @@ namespace Tourplanner.BusinessLayer
             return foundItems;
         }
 
-        public IEnumerable<TourItem> AddTourItem()
+        public TourItem AddTourItem()
         {
             return tourItemDAO.AddItems();
         }
@@ -89,7 +102,6 @@ namespace Tourplanner.BusinessLayer
             {
                 tourItemDAO.AlterLogItems(logItem);
             }
-            
         }
 
         public void DeleteLogItem(LogItem deleteLogItem)
@@ -99,39 +111,14 @@ namespace Tourplanner.BusinessLayer
 
         public void AlterTourDetails(TourItem alterTourItem)
         {
-            string tourDataJson = tourItemDAO.GetTourData(alterTourItem);
-            string infoCode = "";
-            string infoMessage = "";
-
             try
             {
+                string tourDataJson = tourItemDAO.GetTourData(alterTourItem);
+                
                 log.Info($"Try to Parse JSON from Tour Data");
                 JObject jsonObject = JObject.Parse(tourDataJson);
-                int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
-                if (errorCode > 0)
-                {
-                    infoCode = (string) jsonObject["info"]?["statuscode"];
-                    infoMessage = (string) jsonObject["info"]?["messages"]?[0];
-                    throw new ArgumentException($"Tour not Valid Error Code: {errorCode}; Info Code: {infoCode}; Info Messsage: {infoMessage}");
-                }
-                alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
-                alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
-                alterTourItem.RouteSessionID = (string) jsonObject["route"]?["sessionId"];
-
-
-                alterTourItem.RouteInformation = $"Directions of Route From {alterTourItem.Start} to {alterTourItem.Destination}\n" +
-                                                 $"Tour distance: {alterTourItem.TourDistance}km\n" +
-                                                 $"Tour Time: {jsonObject["route"]?["formattedTime"]}\n---------------\n";
-
-                JToken maneuverArray = (JArray) jsonObject["route"]?["legs"]?[0]?["maneuvers"];
-                if (maneuverArray != null)
-                    foreach (var maneuversSource in maneuverArray)
-                    {
-                        alterTourItem.RouteInformation +=
-                            $"{(int) maneuversSource["index"] + 1}. {maneuversSource["narrative"]}; \n" +
-                            $"\tDirection distance {maneuversSource["distance"]}km; \n" +
-                            $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
-                    }
+                LoadJsonData(alterTourItem,jsonObject);
+                
             }
             catch (Exception e)
             {
@@ -139,11 +126,42 @@ namespace Tourplanner.BusinessLayer
                 log.Error(e);
             }
             
-            
-
             tourItemDAO.GetTourMapImage(alterTourItem);
-
             tourItemDAO.AlterTourDetails(alterTourItem);
+        }
+
+        public void LoadJsonData(TourItem alterTourItem, JObject jsonObject)
+        {
+            string infoCode = "";
+            string infoMessage = "";
+
+            int errorCode = (int) jsonObject["route"]?["routeError"]?["errorCode"];
+            if (errorCode > 0)
+            {
+                infoCode = (string) jsonObject["info"]?["statuscode"];
+                infoMessage = (string) jsonObject["info"]?["messages"]?[0];
+                throw new ArgumentException($"Tour not Valid Error Code: {errorCode}; Info Code: {infoCode}; Info Messsage: {infoMessage}");
+            }
+            alterTourItem.TourDistance = (float) jsonObject["route"]?["distance"];
+            alterTourItem.FuelUsed = (float) jsonObject["route"]?["fuelUsed"];
+            alterTourItem.RouteSessionID = (string) jsonObject["route"]?["sessionId"];
+
+
+            alterTourItem.RouteInformation = $"Directions of Route From {alterTourItem.Start} to {alterTourItem.Destination}\n" +
+                                             $"Tour distance: {alterTourItem.TourDistance}km\n" +
+                                             $"Tour Time: {jsonObject["route"]?["formattedTime"]}\n---------------\n";
+
+            JToken maneuverArray = (JArray) jsonObject["route"]?["legs"]?[0]?["maneuvers"];
+            if (maneuverArray != null)
+            {
+                foreach (var maneuversSource in maneuverArray)
+                {
+                    alterTourItem.RouteInformation +=
+                        $"{(int) maneuversSource["index"] + 1}. {maneuversSource["narrative"]}; \n" +
+                        $"\tDirection distance {maneuversSource["distance"]}km; \n" +
+                        $"\tTime for Direction {maneuversSource["formattedTime"]}\n\n";
+                }
+            }
         }
 
         public void GetImage(TourItem tourItem)
@@ -204,8 +222,6 @@ namespace Tourplanner.BusinessLayer
             document.Add(new Paragraph($"{tourItem.RouteInformation}"));
             document.Add(new Paragraph($"Tour Logs").SetFontSize(20));
             document.Add(table);
-
-            
 
             MakeReport(pdf, document, documentName);
         }
@@ -275,7 +291,6 @@ namespace Tourplanner.BusinessLayer
             document.Add(new Paragraph($"Total Tour Intake Calories: {intakeCalories} Calories"));
             document.Add(new Paragraph($"Tours you made").SetFontSize(20));
             document.Add(new Paragraph($"{tourNames}"));
-
 
             MakeReport(pdf, document, documentName);
         }
