@@ -36,7 +36,10 @@ namespace Tourplanner.Test.Tests
         {
             _jsonObject = JObject.Parse("{\"route\":{\"routeError\":{\"errorCode\":2,\"message\":\"\"}},\"info\":{\"statuscode\":402,\"messages\":[\"We are unable to route with the given locations.\"]}}");
             _item = new TourItem();
-            Assert.Throws(typeof(ArgumentException), delegate { _tourItemFactory.LoadJsonData(_item, _jsonObject);});
+
+            _tourItemFactory.LoadJsonData(_item, _jsonObject);
+
+            Assert.AreEqual("We are unable to route with the given locations.", _item.TourDescription);
             
         }
     }

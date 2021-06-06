@@ -25,6 +25,7 @@ namespace Tourplanner
         {
             InitializeComponent();
             DataContext = new TourFolderVM();
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

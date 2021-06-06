@@ -18,19 +18,15 @@
 
         <Menu Grid.ColumnSpan="2" Background="#2c2f33">
             <MenuItem Header="_File" Foreground="White" Background="#2c2f33">
-                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Right" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Left" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" HorizontalAlignment="Right" Foreground="Black"/>
+                <MenuItem Header="Export Tour Data" Foreground="Black" Command="{Binding SaveTourDataJsonCommand}"/>
+                <MenuItem Header="Import Tour Data" Foreground="Black" Command="{Binding LoadTourDataJsonCommand}"/>
             </MenuItem>
             <MenuItem Header="_Options" Foreground="White" Background="#2c2f33">
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <RadioButton GroupName="Datasource" IsChecked="True"  Content="Datasource: Database"   x:Name="Database"   Command="{Binding ChangeDataSourceCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
+                <RadioButton GroupName="Datasource" IsChecked="False" Content="Datasource: FileSystem" x:Name="FileSystem" Command="{Binding ChangeDataSourceCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
             </MenuItem>
             <MenuItem Header="_Help" Foreground="White" Background="#2c2f33">
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
-                <MenuItem Header="Some Sub Menu Item" Foreground="Black"/>
+                <MenuItem Header="Open Documentation" Foreground="Black"/>
             </MenuItem>
         </Menu>
 

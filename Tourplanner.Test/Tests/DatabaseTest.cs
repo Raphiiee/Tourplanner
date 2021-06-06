@@ -12,7 +12,6 @@ namespace Tourplanner.Test.Tests
     {
         private Database _database;
         private TourItem _testTourItem;
-        private int _testLogId;
         private List<TourItem> _itemList;
         private LogItem _newLogItem = new LogItem(){Date = DateTime.Now, LogId = 0, TourId = 0, ElevationGain = 0, Notice = "", Rating = "", SleepTime = 0, StepCounter = 0, IntakeCalories = 0, Distance = 0, DurationTime = 0, Weather = ""};
         private string test;

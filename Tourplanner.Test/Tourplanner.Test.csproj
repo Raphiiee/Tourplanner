@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="testhost.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

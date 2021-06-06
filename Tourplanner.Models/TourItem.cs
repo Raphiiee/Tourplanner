@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Tourplanner.Models
 {

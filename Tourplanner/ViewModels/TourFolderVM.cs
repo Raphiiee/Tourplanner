@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Tourplanner.BusinessLayer;
@@ -22,6 +20,9 @@ namespace Tourplanner.ViewModels
         private ICommand _alterTourDetails;
         private ICommand _printSpecificTourReport;
         private ICommand _printSumerizeTourReport;
+        private ICommand _saveTourDataJsonCommand;
+        private ICommand _loadTourDataJsonCommand;
+        private ICommand _changeDataSourceCommand;
         private TourItem _selectedTourItem;
         private LogItem _selectedLogItem;
         private ITourItemFactory _tourItemFactory;
@@ -38,6 +39,9 @@ namespace Tourplanner.ViewModels
         public ICommand AlterTourDetailsCommand => _alterTourDetails ??= new RelayCommand(AlterTourDetails);
         public ICommand PrintSpecificTourReportCommand => _printSpecificTourReport ??= new RelayCommand(PrintSpecificTourReport);
         public ICommand PrintSumerizeTourReportCommand => _printSumerizeTourReport ??= new RelayCommand(PrintSumerizeTourReport);
+        public ICommand SaveTourDataJsonCommand => _saveTourDataJsonCommand ??= new RelayCommand(SaveTourDataJson);
+        public ICommand LoadTourDataJsonCommand => _loadTourDataJsonCommand ??= new RelayCommand(LoadTourDataJson);
+        public ICommand ChangeDataSourceCommand => _changeDataSourceCommand ??= new RelayCommand(ChangeDataSource);
 
         public ObservableCollection<TourItem> TourItemsList { get; set; }
 
@@ -214,5 +218,42 @@ namespace Tourplanner.ViewModels
             _tourItemFactory.PrintSumerizeTourReport(TourItemsList);
         }
 
+        private void SaveTourDataJson(object commandParameter)
+        {
+            _tourItemFactory.SaveTourDataJson(TourItemsList);
+        }
+
+        private void LoadTourDataJson(object commandParameter)
+        {
+            _tourItemFactory.LoadTourDataJson(TourItemsList);
+            RaisePropertyChangedEvent(nameof(TourItemsList));
+        }
+
+        private void ChangeDataSource(object commandParameter)
+        {
+            string name = commandParameter.ToString();
+            // 0=> Database; 1=> Test Database; else FileSystem
+            int source = 0;
+
+            if (name is null)
+            {
+                return;
+            }
+
+            name = name.ToLower();
+
+            if (name == "database")
+            {
+                source = 0;
+            }
+            else if (name == "filesystem")
+            {
+                source = 3;
+            }
+            _tourItemFactory.ChangeDataSource(source);
+            InitListBox();
+            RaisePropertyChangedEvent(nameof(TourItemsList));
+
+        }
     }
 }

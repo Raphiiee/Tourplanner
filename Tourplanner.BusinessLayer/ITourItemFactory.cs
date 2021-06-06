@@ -18,6 +18,8 @@ namespace Tourplanner.BusinessLayer
         void CleanUpImages(ObservableCollection<TourItem> tourItems);
         void PrintSpecificTourReport(TourItem tourItem);
         void PrintSumerizeTourReport(ObservableCollection<TourItem> tourItems);
+        void SaveTourDataJson(ObservableCollection<TourItem> tourItems);
+        void LoadTourDataJson(ObservableCollection<TourItem> tourItems);
         void ChangeDataSource(int source);
     }
 }
