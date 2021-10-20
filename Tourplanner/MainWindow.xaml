@@ -8,7 +8,11 @@
         mc:Ignorable="d"
         Title="Amazing Tourplanner" Height="500" Width="800" MinHeight="500" MinWidth="800">
 
-    <Grid Background="#2c2f33" >
+    <Window.DataContext>
+        <viewmodels:TourFolderVM/>
+    </Window.DataContext>
+
+    <Grid Background="#2c2f33">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,46 +20,85 @@
             <RowDefinition Height="22*"/>
         </Grid.RowDefinitions>
 
-        <Menu Grid.ColumnSpan="2" Background="#2c2f33">
-            <MenuItem Header="_File" Foreground="White" Background="#2c2f33">
-                <MenuItem Header="Export Tour Data" Foreground="Black" Command="{Binding SaveTourDataJsonCommand}"/>
-                <MenuItem Header="Import Tour Data" Foreground="Black" Command="{Binding LoadTourDataJsonCommand}"/>
+        <!-- Menü Leiste -->
+        <Menu Grid.ColumnSpan="2" 
+              Background="#2c2f33">
+            
+            <!-- Menü Leisten Eintrag File -->
+            <MenuItem Header="_File" 
+                      Foreground="White" Background="#2c2f33">
+                <MenuItem Header="Export Tour Data" 
+                          Foreground="Black" 
+                          Command="{Binding SaveTourDataJsonCommand}"/>
+                <MenuItem Header="Import Tour Data" 
+                          Foreground="Black" 
+                          Command="{Binding LoadTourDataJsonCommand}"/>
             </MenuItem>
-            <MenuItem Header="_Options" Foreground="White" Background="#2c2f33">
-                <RadioButton GroupName="Datasource" IsChecked="True"  Content="Datasource: Database"   x:Name="Database"   Command="{Binding ChangeDataSourceCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
-                <RadioButton GroupName="Datasource" IsChecked="False" Content="Datasource: FileSystem" x:Name="FileSystem" Command="{Binding ChangeDataSourceCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
+
+            <!-- Menü Leisten Eintrag Options -->
+            <MenuItem Header="_Options" 
+                      Foreground="White" 
+                      Background="#2c2f33">
+                <RadioButton GroupName="Datasource" 
+                             IsChecked="True"  
+                             Content="Datasource: Database"   
+                             x:Name="Database"   
+                             Command="{Binding ChangeDataSourceCommand}" 
+                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
+                <RadioButton GroupName="Datasource" 
+                             IsChecked="False" 
+                             Content="Datasource: FileSystem" 
+                             x:Name="FileSystem" 
+                             Command="{Binding ChangeDataSourceCommand}" 
+                             CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
             </MenuItem>
-            <MenuItem Header="_Help" Foreground="White" Background="#2c2f33">
-                <MenuItem Header="Open Documentation" Foreground="Black"/>
+
+            <!-- Menü Leisten Eintrag Help -->
+            <MenuItem Header="_Help" 
+                      Foreground="White" 
+                      Background="#2c2f33">
+                <MenuItem Header="Open Documentation" 
+                          Foreground="Black"/>
             </MenuItem>
         </Menu>
 
-        <Grid Grid.Row="1">
+        <!-- Suchleisten Zeile -->
+        <Grid Grid.Row="1" 
+              Margin="0,3.5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Margin="10,0,0,0" Padding="10,3.5,10,0" Text="{Binding SearchName, Mode=TwoWay}" >
-                <TextBox.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="15"></Setter>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
+            <!-- Suchbox -->
+            <TextBox Margin="5,0,0,0" 
+                     Padding="10,0" 
+                     Text="{Binding SearchName, Mode=TwoWay}" 
+                     Style="{StaticResource SearchBoxStyle}"/>
 
-            <Button Height="25"  Grid.Column="1" Margin="10,0,0,0" Background="#626977" ToolTip="Search" Command="{Binding SearchCommand}">
-                <Image Source="Images/right-pointing-magnifying-glass.png"></Image>
+            <!-- Suchen Button -->
+            <Button Height="30"  
+                    Grid.Column="1" 
+                    Margin="10,0,0,0" 
+                    ToolTip="Search" 
+                    Command="{Binding SearchCommand}"
+                    Style="{StaticResource ButtonStandardStyle}">
+                <Image Source="Images/right-pointing-magnifying-glass.png"/>
             </Button>
-            <Button Height="25" Grid.Column="2" Margin="10,0,10,0" Background="#626977" ToolTip="Delete Search Request" Command="{Binding ClearCommand}">
+
+            <!-- Suchanfrage löschen -->
+            <Button Height="30" 
+                    Grid.Column="2" 
+                    Margin="10,0" 
+                    ToolTip="Delete Search Request" 
+                    Command="{Binding ClearCommand}" 
+                    Style="{StaticResource ButtonStandardStyle}">
                 <Image Source="Images/fire-extinguisher.png"/>
             </Button>
-
         </Grid>
-
         
-
+        <!-- Touren GUI -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -67,46 +110,88 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="1" Foreground="White" Background="#626977" Margin="5" ItemsSource="{Binding TourItemsList}" SelectedItem="{Binding SelectedTourItem, Mode=TwoWay}" DisplayMemberPath="TourName" SelectedIndex="0">
+            <!-- Anzeige der gespeicherten Touren -->
+            <ListView Grid.Row="1" 
+                      Foreground="White" 
+                      Background="#626977" 
+                      Margin="5" 
+                      ItemsSource="{Binding TourItemsList}" 
+                      SelectedItem="{Binding SelectedTourItem, Mode=TwoWay}" 
+                      DisplayMemberPath="TourName" 
+                      SelectedIndex="0">
                 <ListView.BorderBrush>
-                    <RadialGradientBrush Opacity="10000"></RadialGradientBrush>
+                    <RadialGradientBrush Opacity="10"/>
                 </ListView.BorderBrush>
             </ListView>
 
-            <StackPanel  Margin="5,5,0,0" Orientation="Horizontal">
-                <TextBlock  Foreground="White" Margin="0,5,5,5">Your Tours</TextBlock>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Add a Tour" Command="{Binding AddTourCommand}">
+            <!-- Verwaltungsleiste der Touren -->
+            <StackPanel  Margin="5,5,0,0" 
+                         Orientation="Horizontal">
+                <TextBlock  Foreground="White" 
+                            Margin="0,5,5,5"
+                            VerticalAlignment="Center">
+                    Your Tours
+                </TextBlock>
+
+                <!-- Tour hinzufügen -->
+                <Button Height="30" 
+                        Margin="10,0" 
+                        ToolTip="Add a Tour" 
+                        Command="{Binding AddTourCommand}" 
+                        Style="{StaticResource ButtonStandardStyle}">
                     <Image Source="Images/plus-sign.png"/>
                 </Button>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Delete a Tour" Command="{Binding DeleteTourCommand}">
-                    <Image Source="Images/minus-sign.png"/>
+
+                <!-- Tour löschen -->
+                <Button Height="30" 
+                        Margin="10,0" 
+                        ToolTip="Delete a Tour" 
+                        Command="{Binding DeleteTourCommand}" 
+                        Style="{StaticResource ButtonStandardStyle}">
+                    <Image  Source="Images/minus-sign.png"/>
                 </Button>
-                <Button Height="25" Margin="10,0,10,0" Background="#626977" ToolTip="Print the Summerize Tour Report" Command="{Binding PrintSumerizeTourReportCommand}">
+
+                <!-- Alle Touren zu einer PDF konvertieren -->
+                <Button Height="30" 
+                        Margin="10,0" 
+                        ToolTip="Print the Summerize Tour Report" 
+                        Command="{Binding PrintSumerizeTourReportCommand}" 
+                        Style="{StaticResource ButtonStandardStyle}">
                     <Image Source="Images/printer.png"/>
                 </Button>
             </StackPanel>
 
-            <GridSplitter Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="#626977" ></GridSplitter>
+            <!-- Vertikaler Gridsplitter -->
+            <GridSplitter Grid.Column="1" 
+                          Grid.RowSpan="2" 
+                          HorizontalAlignment="Stretch" 
+                          Background="#626977" />
 
-            
-            <Grid Grid.Column="2" Grid.RowSpan="2">
+            <!-- Routen Detail Ansicht -->
+            <Grid Grid.Column="2" 
+                  Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="3"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 
-                <TabControl Background="#626977" Margin="5,5,5,5">
-
+                <TabControl Background="#626977" 
+                            Margin="5,5,5,5">
+                    
+                    <!-- Tab Item Route (Routenbild anzeigen) -->
                     <TabItem Header="Route">
                         <Image Source="{Binding SelectedTourItem.RouteImage, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
-                        
                     </TabItem>
+                    
+                    <!-- Tab Item Description (Turn by turn direction) -->
                     <TabItem Header="Description">
                         <ScrollViewer>
                             <TextBlock Text="{Binding SelectedTourItem.RouteInformation}" Foreground="White"></TextBlock>
                         </ScrollViewer>
                     </TabItem>
+                    
+                    <!-- Tab Item Options (Tour verändern) -->
                     <TabItem Header="Options">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -121,61 +206,94 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0" Foreground="White" Margin="5,5">Tourname</TextBlock>
-                            <TextBox   Grid.Column="1" Grid.Row="0" Text="{Binding SelectedTourItem.TourName}" Margin="5,5">
-                                <TextBox.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="9"></Setter>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
 
-                            <TextBlock Grid.Column="0" Grid.Row="1" Foreground="White" Margin="5,5">Start</TextBlock>
-                            <TextBox   Grid.Column="1" Grid.Row="1" Text="{Binding SelectedTourItem.Start}" Margin="5,5">
-                                <TextBox.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="9"></Setter>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                            <TextBlock Grid.Column="0" 
+                                       Grid.Row="0" 
+                                       Foreground="White" 
+                                       Margin="5,5" 
+                                       VerticalAlignment="Center">
+                                Tourname
+                            </TextBlock>
+                            <TextBox Grid.Column="1" 
+                                     Grid.Row="0" 
+                                     Text="{Binding SelectedTourItem.TourName}" 
+                                     Margin="5,5" 
+                                     Style="{StaticResource InputBoxStyle}"/>
+
+                            <TextBlock Grid.Column="0" 
+                                       Grid.Row="1" 
+                                       Foreground="White" 
+                                       Margin="5,5" 
+                                       VerticalAlignment="Center">
+                                Start
+                            </TextBlock>
+                            <TextBox Grid.Column="1" 
+                                     Grid.Row="1" 
+                                     Text="{Binding SelectedTourItem.Start}" 
+                                     Margin="5,5" 
+                                     Style="{StaticResource InputBoxStyle}"/>
                             
-                            <TextBlock Grid.Column="0" Grid.Row="2" Foreground="White" Margin="5,5">Destination</TextBlock>
-                            <TextBox   Grid.Column="1" Grid.Row="2" Text="{Binding SelectedTourItem.Destination}" Margin="5,5">
-                                <TextBox.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="9"></Setter>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                            <TextBlock Grid.Column="0" 
+                                       Grid.Row="2" 
+                                       Foreground="White"
+                                       Margin="5,5" 
+                                       VerticalAlignment="Center">
+                                Destination
+                            </TextBlock>
+                            <TextBox Grid.Column="1" 
+                                     Grid.Row="2" 
+                                     Text="{Binding SelectedTourItem.Destination}" 
+                                     Margin="5,5" 
+                                     Style="{StaticResource InputBoxStyle}"/>
                             
-                            <TextBlock Grid.Column="0" Grid.Row="3" Foreground="White" Margin="5,5">Tourdescription </TextBlock>
-                            <TextBox   Grid.Column="1" Grid.Row="3" Text="{Binding SelectedTourItem.TourDescription}" Margin="5,5">
-                                <TextBox.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="9"></Setter>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                            <TextBlock Grid.Column="0" 
+                                       Grid.Row="3" 
+                                       Foreground="White" 
+                                       Margin="5,5" 
+                                       VerticalAlignment="Center">
+                                Tourdescription
+                            </TextBlock>
+                            <TextBox Grid.Column="1" 
+                                     Grid.Row="3" 
+                                     Text="{Binding SelectedTourItem.TourDescription}" 
+                                     Margin="5,5" 
+                                     Style="{StaticResource InputBoxStyle}"/>
                             
-                            <TextBlock Grid.Column="0" Grid.Row="4" Foreground="White" Margin="5,5">RouteType</TextBlock>
-                            <ComboBox  Grid.Column="1" Grid.Row="4" SelectedIndex="0" Margin="5,5" ItemsSource="{Binding PossibleRouteTypes}" SelectedItem="{Binding SelectedTourItem.RouteType}"/>
+                            <TextBlock Grid.Column="0" 
+                                       Grid.Row="4" 
+                                       Foreground="White" 
+                                       Margin="5,5" 
+                                       VerticalAlignment="Center">
+                                RouteType
+                            </TextBlock>
+                            <ComboBox Grid.Column="1" 
+                                      Grid.Row="4" 
+                                      SelectedIndex="0" 
+                                      Margin="5,5" 
+                                      ItemsSource="{Binding PossibleRouteTypes}" 
+                                      SelectedItem="{Binding SelectedTourItem.RouteType}"/>
                             
-                            <Button    Grid.Column="1" Grid.Row="5" Margin="5" Command="{Binding AlterTourDetailsCommand}">
-                                Save
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="9"></Setter>
-                                    </Style>
-                                </Button.Resources>
-                            </Button>
+                            <Button Grid.Column="1" 
+                                    Grid.Row="5"
+                                    Margin="5"
+                                    Command="{Binding AlterTourDetailsCommand}" 
+                                    Style="{StaticResource SaveButtonStyle}" 
+                                    Content="Save"/>
                         </Grid>
                     </TabItem>
                 </TabControl>
 
-                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="#626977" ></GridSplitter>
+                <!-- Horizontaler Gridsplitter -->
+                <GridSplitter Grid.Row="1" 
+                              HorizontalAlignment="Stretch" 
+                              Background="#626977" />
 
-                <DockPanel Grid.Row="2" Margin="5,5,5,5">
-                    <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <!-- Tourlog Ansicht -->
+                <DockPanel Grid.Row="2" 
+                           Margin="5,5,5,5">
+                    <Menu DockPanel.Dock="Top" 
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Top">
                         <Menu.ItemsPanel>  
                             <ItemsPanelTemplate>  
                                 <Grid>
@@ -185,28 +303,97 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                 </Grid> 
                             </ItemsPanelTemplate>  
                         </Menu.ItemsPanel> 
-                        <MenuItem Header="Logs" Grid.Column="0"/>
-                        <MenuItem Grid.Column="1" Command="{Binding AddLogCommand}"                  ToolTip="Add Log entry"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/plus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="2" Command="{Binding DeleteLogCommand}"               ToolTip="Delete Log entry"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/minus-sign.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="3" Command="{Binding PrintSpecificTourReportCommand}" ToolTip="Print Specific Tour Report"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/printer.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
-                        <MenuItem Grid.Column="4" Command="{Binding AlterLogCommand}" ToolTip="Save Log"><MenuItem.Icon><Image><Image.Source><BitmapImage UriSource="Images/floppy-disk.png"></BitmapImage></Image.Source></Image></MenuItem.Icon></MenuItem>
+                        <MenuItem Header="Logs" 
+                                  Grid.Column="0"/>
+                        
+                        <!-- Log hinzufügen -->
+                        <MenuItem Grid.Column="1" 
+                                  Command="{Binding AddLogCommand}" 
+                                  ToolTip="Add Log entry"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center">
+                            <MenuItem.Header>
+                                    <Image Height="18">
+                                        <Image.Source>
+                                            <BitmapImage UriSource="Images/plus-sign.png" />
+                                        </Image.Source>
+                                    </Image>
+                            </MenuItem.Header>
+                        </MenuItem>
+                        
+                        <!-- Log löschen -->
+                        <MenuItem Grid.Column="2" 
+                                  Command="{Binding DeleteLogCommand}" 
+                                  ToolTip="Delete Log entry">
+                            <MenuItem.Header>
+                                <Image Height="18">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/minus-sign.png"/>
+                                    </Image.Source>
+                                </Image>
+                            </MenuItem.Header>
+                        </MenuItem>
+                        
+                        <!-- Log zu PDF konvertieren -->
+                        <MenuItem Grid.Column="3" 
+                                  Command="{Binding PrintSpecificTourReportCommand}" 
+                                  ToolTip="Print Specific Tour Report">
+                            <MenuItem.Header>
+                                <Image Height="18">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/printer.png"/>
+                                    </Image.Source>
+                                </Image>
+                            </MenuItem.Header>
+                        </MenuItem>
+                        
+                        <!-- Log speichern -->
+                        <MenuItem Grid.Column="4" 
+                                  Command="{Binding AlterLogCommand}" 
+                                  ToolTip="Save Log">
+                            <MenuItem.Header>
+                                <Image Height="18">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/floppy-disk.png"/>
+                                    </Image.Source>
+                                </Image>
+                            </MenuItem.Header>
+                        </MenuItem>
                     </Menu>
-                    <DataGrid DockPanel.Dock="Bottom"  Background="#626977" ItemsSource="{Binding SelectedTourItem.Log}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedLogItem}">
+                    
+                    <!-- Datagrid für die Log einträge -->
+                    <DataGrid DockPanel.Dock="Bottom" 
+                              Background="#626977" 
+                              ItemsSource="{Binding SelectedTourItem.Log}" 
+                              AutoGenerateColumns="False" 
+                              CanUserAddRows="False" 
+                              SelectedItem="{Binding SelectedLogItem}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date"                  Binding="{Binding Date}"/>
-                            <DataGridTextColumn Header="Duration in Minutes"   Binding="{Binding DurationTime}"/>
-                            <DataGridTextColumn Header="Distance in km"        Binding="{Binding Distance}"/>
-                            <DataGridTextColumn Header="Elevation Gain in m"   Binding="{Binding ElevationGain}"/>
-                            <DataGridTextColumn Header="Sleep Time in Minutes" Binding="{Binding SleepTime}"/>
-                            <DataGridTextColumn Header="Step Counter"          Binding="{Binding StepCounter}"/>
-                            <DataGridTextColumn Header="Intake Calories"       Binding="{Binding IntakeCalories}"/>
-                            <DataGridTextColumn Header="Weather"               Binding="{Binding Weather}"/>
-                            <DataGridTextColumn Header="Rating"                Binding="{Binding Rating}"/>
-                            <DataGridTextColumn Header="Notice"                Binding="{Binding Notice}"/>
+                            <DataGridTextColumn Header="Date" 
+                                                Binding="{Binding Date}"/>
+                            <DataGridTextColumn Header="Duration in Minutes"
+                                                Binding="{Binding DurationTime}"/>
+                            <DataGridTextColumn Header="Distance in km"        
+                                                Binding="{Binding Distance}"/>
+                            <DataGridTextColumn Header="Elevation Gain in m"   
+                                                Binding="{Binding ElevationGain}"/>
+                            <DataGridTextColumn Header="Sleep Time in Minutes" 
+                                                Binding="{Binding SleepTime}"/>
+                            <DataGridTextColumn Header="Step Counter"          
+                                                Binding="{Binding StepCounter}"/>
+                            <DataGridTextColumn Header="Intake Calories"       
+                                                Binding="{Binding IntakeCalories}"/>
+                            <DataGridTextColumn Header="Weather"               
+                                                Binding="{Binding Weather}"/>
+                            <DataGridTextColumn Header="Rating"               
+                                                Binding="{Binding Rating}"/>
+                            <DataGridTextColumn Header="Notice"                
+                                                Binding="{Binding Notice}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
